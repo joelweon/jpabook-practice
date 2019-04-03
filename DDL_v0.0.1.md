@@ -58,10 +58,10 @@ Hibernate:
 Hibernate: 
 ```sql
     create table orders (
-       orders_id bigint not null,
+       order_id bigint not null,
         member_id bigint,
         order_date timestamp,
         status varchar(255),
-        primary key (orders_id)
+        primary key (order_id)
     )
 ```

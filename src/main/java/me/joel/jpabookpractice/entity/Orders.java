@@ -17,7 +17,7 @@ import java.util.Date;
 public class Orders {
 
     @Id @GeneratedValue
-    private Long ordersId;
+    private Long orderId;
 
 //    @Column(name="MEMBER_ID") 매핑 기본 전략을 사용해서 생략가능
     private Long memberId;
