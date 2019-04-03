@@ -3,9 +3,7 @@ package me.joel.jpabookpractice.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Date : 19. 4. 2
@@ -19,9 +17,13 @@ public class OrderItem {
     @Id @GeneratedValue
     private Long orderItemId;
 
-    private Long itemId;
+    @ManyToOne
+    @JoinColumn(name = "itemId")
+    private Item item; // 주문 상품
 
-    private Long orderId;
+    @ManyToOne
+    @JoinColumn(name = "orderId")
+    private Orders orders; // 주문
 
     private int orderPrice; // 주문가격
     private int count; // 주문수량
