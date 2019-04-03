@@ -19,7 +19,7 @@ public class Orders {
     @Id @GeneratedValue
     private Long ordersId;
 
-//    @Column(name="MEMBER_ID")
+//    @Column(name="MEMBER_ID") 매핑 기본 전략을 사용해서 생략가능
     private Long memberId;
 
 //     @Temporal(TemporalType.TIMESTAMP) 기본값이라 생략가능
