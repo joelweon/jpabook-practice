@@ -17,7 +17,7 @@ import java.util.Date;
 public class Orders {
 
     @Id @GeneratedValue
-    private Long orderzId;
+    private Long ordersId;
 
 //    @Column(name="MEMBER_ID")
     private Long memberId;
