@@ -46,6 +46,8 @@ Member member = em.find(Member.class, order.getMemberId());
     Member member = order.getMember(); // 참조 사용
 ```
 
+
+
 ## v0.0.2
 - 외래키로 사용한 필드 제거, 참조를 사용(연관관계 주인 설정)
 - 양방향 관계 설정
@@ -87,8 +89,8 @@ Member member = em.find(Member.class, order.getMemberId());
 그 반대의 경우(Member)는 @OneToMany 어노테이션과 함께 mappedby 속성을 넣어준다.
 Member 의 경우는 주인이 아니기 때문에 읽기만 할 수 있다.
 
-#### sql
-```sql
+#### java
+```java
     @OneToMany(mappedBy = "member")
     private List<Orders> ordersList = new ArrayList<>();
 ```
@@ -158,3 +160,30 @@ orders.setMember(member);
 OrderItem -> Item  
 주문상품에서 상품을 참조하는 경우는 많지만 그 반대는 거의 없어 단방향 관계로 설정했다.  
 (OrderItem.item) 필드를 사용해서 참조
+
+
+
+## v0.0.3
+- 요구사항 추가
+    - 상품을 주문할 때 배송 정보를 입력할 수 있다. 주문과 배송은 일대일 관계.
+    - 상품을 카테고리로 구분 가능
+- 클래스 생성(배송-delivery, 카테고리-category)
+- DDL 파일 생성
+
+
+    주문(Orders) 1-----------1 배송(Delivery)
+
+객체 관계를 고려할 때 주문이 배송을 자주 접근할 에정이기 때문에 외래키는 주문 테이블에 둔다.
+참고로 일대일 관계이므로 Orders 테이블의 DELIVERY_ID 외럐키는 유니크 제약 조건을 거는 것이 좋다.
+-> Orders.delivery(연관관계 주인)
+
+
+    카테고리(Category) *-----------* 상품(Item)
+
+카테고리와 상품은 다대다 관계이다.  
+주인은 카테고리로 정했다.
+
+참고로 다대다 관계는 테이블 연결을 JPA가 알아서 처리해주지만 연결테이블(CATEGORY_ITEM)에
+새로운 필드를 추가 할 수 없기 때문에 실무에서는 거의 쓰이지않고 1대다 다대1 관계로 CategoryItem
+이라는 엔티티를 추가하여 연결관계를 매핑하는 것을 권장한다.
+

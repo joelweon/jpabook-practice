@@ -1,5 +1,3 @@
-## v0.0.3
-
 Hibernate: 
 ```sql
     create table category (
