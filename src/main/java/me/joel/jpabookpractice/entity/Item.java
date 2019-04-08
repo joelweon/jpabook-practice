@@ -3,10 +3,7 @@ package me.joel.jpabookpractice.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +13,10 @@ import java.util.List;
  */
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "itemType")
 @Getter @Setter
-public class Item {
+public class Item extends BaseEntity {
 
     @Id @GeneratedValue
     private Long itemId;
@@ -28,5 +27,7 @@ public class Item {
     private String name; // 이름
     private int price;   // 가격
     private int stockQuantity; // 재고수량
+
+
 
 }
