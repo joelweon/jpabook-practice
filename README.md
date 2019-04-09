@@ -26,7 +26,7 @@
 
 현재 객체 설계 방식은 테이블 설계에 맞춘 것이다.  
 객체지향 설계는 객체가 맡은 역할과 책임에 따라 관련 있는 객체끼리 참조하도록 설계해야한다.  
-RDB(관계형 데이터베이스) 에서는 외래키를 이용해 조인인이 가능 하지만 객체에서는 해당하는 기능이 없기 때문에
+RDB(관계형 데이터베이스) 에서는 외래키를 이용해 조인이 가능 하지만 객체에서는 해당하는 기능이 없기 때문에
 연관된 객체를 참조를 통해 찾아야한다.
 
 어떤 회원이 주문했는지 조회 할 때  
@@ -266,4 +266,30 @@ em.persist(order);
 
 /* 영속성 전이 사용 후 */
 em.persist(order); // delivery, orderItems 플러시 시점에 영속성 전이
+```
+
+
+## v0.0.6
+- 값 타입 매핑
+
+Member, Delivery에 동일한 주소 정보를 Address라는 값 타입을 만들어서 사용한다.
+
+#### java
+```java
+@Embeddable
+public class Address {
+    private String city;
+
+    private String street;
+
+    private String zipcode;
+}
+```
+
+#### java
+```java
+public class Member {
+    @Embedded
+    private Address address;
+}
 ```
