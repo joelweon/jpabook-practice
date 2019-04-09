@@ -102,6 +102,8 @@ Hibernate:
     
     create table orders (
        order_id bigint not null,
+        create_date timestamp,
+        last_modified_date timestamp,
         order_date timestamp,
         status varchar(255),
         delivery_id bigint,
