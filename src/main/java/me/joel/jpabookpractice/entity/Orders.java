@@ -16,7 +16,7 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
-public class Orders {
+public class Orders extends BaseEntity {
 
     @Id @GeneratedValue
     private Long orderId;
