@@ -235,3 +235,35 @@ OrderItem -> Item
 
 ### 공통된 컬럼 클래스 분리
 새로 생성한 클래스에 @MappedSuperclass 선언해 주고 다른 클래스에서 새로 생성한 클래스를 상속받으면 된다.
+
+## v0.0.5
+- 글로벌 페치 전략 설정
+- 영속성 전이 설정
+
+### 글로벌 페지 전략 기본값
+LAZE : @OneToMany, @ManyToMany
+EAGER: @OneToOne, @ManyToOne
+
+### 영속성 전이
+데이터베이스에 저장할 때 연관된 엔티티들은 모두 영속상태여야 한다.
+연관된 엔티티 중 영속상태가 아닌 엔티티가 있으면 에러가 발생한다.(정확히는 플러시 시점에서 오류)
+
+영속성 전이를 사용하면 편리하게 엔티티를 영속상태로 만들 수 있다.
+(cascade - CascadeType.ALL)
+
+영속성 전이는 연관관계 매핑하는 것과는 아무 관련이 없다.
+단지 엔티티를 영속화할 때 연관된 엔티티를 같이 영속화하는 편리함을 제공할 뿐이다.
+
+#### java
+```java
+/* 영속성 전이 사용 전 */
+...
+em.persist(delivery);
+em.persist(orderItem1);
+em.persist(orderItem2);
+em.persist(order);
+
+
+/* 영속성 전이 사용 후 */
+em.persist(order); // delivery, orderItems 플러시 시점에 영속성 전이
+```

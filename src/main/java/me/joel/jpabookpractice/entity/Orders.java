@@ -21,14 +21,14 @@ public class Orders extends BaseEntity {
     @Id @GeneratedValue
     private Long orderId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId") //생략하면 member_member_id 로 컬럼 생성됨.
     private Member member; // 주문회원
 
-    @OneToMany(mappedBy = "orders")
+    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
     private List<OrderItem> orderItemList = new ArrayList<>();
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "deliveryId")  // 주문에서 배송으로 자주 접근할 예정이니 외래키는 주문키에 둔다.(Orders.delivery -> 주인)
     private Delivery delivery; // 배송정보
 
