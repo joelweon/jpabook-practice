@@ -293,3 +293,60 @@ public class Member {
     private Address address;
 }
 ```
+
+***
+
+## v0.1.1 간단한 웹 애플리케이션 제작
+- 회원 패키지 별도 구성
+- 회원 등록
+- 회원 목록 조회
+Service, Repository 구현
+
+- 애플리케이션 기능 분석
+    1. 회원기능
+        - 회원 등록
+        - 회원 목록 조회
+    2. 상품기능
+        - 상품 등록
+        - 상품 목록 조회
+        - 상품 수정
+    3. 주문기능
+        - 상품 주문
+        - 주문 내역 조회
+        - 주문 취소
+        
+- 개발 순서
+    1. 비즈니스 로직을 수행하는 서비스와 리파지토리 계층을 개발
+    2. 테스트 케이스 작성 후 검증
+    3. 컨트롤러와 뷰 개발       
+    
+- 사용기술
+    - 뷰: thymeleaf
+    - 웹 계층 : 스프링 MVC
+    - 데이터 저장 계층 : JPA, 하이버네이트
+    - 데이터베이스 : H2 인메모리
+    - 기반 프레임워크 : 스프링 프레임워크 기반의 스프링부트
+    - 빌드 : 메이븐
+    
+
+### 엔티티메니저 주입
+```java
+@PersistenceContext
+EntityManager em;
+```
+
+### 엔티티 매니저 팩토리 주입
+```java
+@PersistenceUnit
+EntityManagerFactory emf;
+// @PersistenceContext를 사용해서 컨테이너가 관리하는 엔티티 매니저를 주입받아
+// 사용해서 엔티티 매니저 팩토매를 직접 사용하는 경우는 거의 없다.
+```
+
+### @Transactional
+@Transactional은 RuntimeException과 그 자식들인 Unchecked(언체크) 예외만 롤백한다.
+만약 체크 예외가 발생해도 롤백하고 싶다면
+`@Transactional(rollbackOn = Exception.class)` 이전 버전은 `@Transactional(rollbackFor = Exception.class)`
+를 명시하여 롤백할 예외를 정해야한다.  
+@Transactional의 위치가 클래스에 위치하면 모든 메서드에 적용하는 것이고,
+메서드에도 추가하면 메서드에 설정한 @Transactional 속성이 우선시 된다.

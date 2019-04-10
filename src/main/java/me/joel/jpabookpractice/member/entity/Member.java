@@ -1,7 +1,10 @@
-package me.joel.jpabookpractice.entity;
+package me.joel.jpabookpractice.member.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.joel.jpabookpractice.entity.Address;
+import me.joel.jpabookpractice.entity.BaseEntity;
+import me.joel.jpabookpractice.entity.Orders;
 
 import javax.persistence.*;
 import java.util.ArrayList;

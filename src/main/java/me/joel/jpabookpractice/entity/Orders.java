@@ -2,6 +2,7 @@ package me.joel.jpabookpractice.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.joel.jpabookpractice.member.entity.Member;
 
 import javax.persistence.*;
 import java.util.ArrayList;
