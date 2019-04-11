@@ -296,7 +296,7 @@ public class Member {
 
 ***
 
-## v0.1.1 
+## v0.1.1
 - 회원 패키지 별도 구성
 - 회원 등록
 - 회원 목록 조회
@@ -352,3 +352,19 @@ EntityManagerFactory emf;
 를 명시하여 롤백할 예외를 정해야한다.  
 @Transactional의 위치가 클래스에 위치하면 모든 메서드에 적용하는 것이고,
 메서드에도 추가하면 메서드에 설정한 @Transactional 속성이 우선시 된다.
+
+
+## v0.1.2
+- 회원 기능 테스트
+    - 회원가입 성공
+    - 회원가입 할 때 같은 이름 있을 경우 예외
+
+### @Transactional
+test에서 @Transactional 선언 안해주면 같지 않다고 나온다.(assertEquals -> false)
+@Transactional을 선언하면 영속성 컨텍스트 내의 1차캐시에 저장된다.
+그래서 findOne(saveId)을 해도 하이버네이트 1 레벨 캐시에 있는 member가 조회 되기 때문에(DB조회X) 같다.
+그 반대의 경우는 메서드마다(join, findOne) 각각의 트랜잭션으로 처리된다.
+findOne(saveId)을 하면 DB에서 쿼리를 가져와서 둘은 다르다고 나온다.
+참고 : https://stackoverflow.com/questions/26597440/how-do-you-test-spring-transactional-without-just-hitting-hibernate-level-1-cac
+
+확실하진 않아서 자세하고 정확한 건 더 공부 해야 할 듯 하다.
