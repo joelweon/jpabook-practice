@@ -17,11 +17,11 @@ public class OrderItem {
     @Id @GeneratedValue
     private Long orderItemId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "itemId")
     private Item item; // 주문 상품
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orderId")
     private Orders orders; // 주문
 

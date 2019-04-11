@@ -2,6 +2,7 @@ package me.joel.jpabookpractice.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.joel.jpabookpractice.member.entity.Member;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,23 +17,29 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
-public class Orders {
+public class Orders extends BaseEntity {
 
     @Id @GeneratedValue
     private Long orderId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId") //생략하면 member_member_id 로 컬럼 생성됨.
-    private Member member;
+    private Member member; // 주문회원
 
-    @OneToMany(mappedBy = "orders")
+    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
     private List<OrderItem> orderItemList = new ArrayList<>();
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "deliveryId")  // 주문에서 배송으로 자주 접근할 예정이니 외래키는 주문키에 둔다.(Orders.delivery -> 주인)
+    private Delivery delivery; // 배송정보
+
     //     @Temporal(TemporalType.TIMESTAMP) 기본값이라 생략가능
-    private Date orderDate; // 주문 날짜
-    //
+    private Date orderDate; // 주문시간
+
     @Enumerated(EnumType.STRING)
     private OrderStatus status; // 주문상태
+
+
 
     /*
     연관관계 메서드
@@ -57,5 +64,10 @@ public class Orders {
     public void addOrderItem(OrderItem orderItem) {
         orderItemList.add(orderItem);
         orderItem.setOrders(this);
+    }
+
+    public void setDelivery(Delivery delivery) {
+        this.delivery = delivery;
+        delivery.setOrders(this);
     }
 }

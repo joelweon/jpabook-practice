@@ -1,31 +1,32 @@
 # 자바 ORM 표준 JPA 프로그래밍
 - 실전 예제를 따라하며 JPA를 학습한다.
+- [스프링 데이터 예제 프로젝트로 배우는 전자정부 표준 데이터베이스 프레임워크- 김영한](https://book.naver.com/bookdb/book_detail.nhn?bid=9252528)
+
 
 ## v0.0.1
 - 요구사항 분석
+    1. 회원 기능
+        - 회원 등록
+        - 회원 조회
+    
+    2. 상품 기능
+        - 상품 등록
+        - 상품 수정
+        - 상품 조회
+    
+    3. 주문 기능
+        - 상품 주문
+        - 주문 내역 조회
+        - 주문 취소
 - 클래스 생성
 - DDL 파일 생성
 
-#### 요구사항 분석
-1. 회원 기능
-- 회원 등록
-- 회원 조회
-
-2. 상품 기능
-- 상품 등록
-- 상품 수정
-- 상품 조회
-
-3. 주문 기능
-- 상품 주문
-- 주문 내역 조회
-- 주문 취소
 
 ***
 
 현재 객체 설계 방식은 테이블 설계에 맞춘 것이다.  
 객체지향 설계는 객체가 맡은 역할과 책임에 따라 관련 있는 객체끼리 참조하도록 설계해야한다.  
-RDB(관계형 데이터베이스) 에서는 외래키를 이용해 조인인이 가능 하지만 객체에서는 해당하는 기능이 없기 때문에
+RDB(관계형 데이터베이스) 에서는 외래키를 이용해 조인이 가능 하지만 객체에서는 해당하는 기능이 없기 때문에
 연관된 객체를 참조를 통해 찾아야한다.
 
 어떤 회원이 주문했는지 조회 할 때  
@@ -45,6 +46,8 @@ Member member = em.find(Member.class, order.getMemberId());
     Order order = em.find(Order.class, orderId);
     Member member = order.getMember(); // 참조 사용
 ```
+
+
 
 ## v0.0.2
 - 외래키로 사용한 필드 제거, 참조를 사용(연관관계 주인 설정)
@@ -87,8 +90,8 @@ Member member = em.find(Member.class, order.getMemberId());
 그 반대의 경우(Member)는 @OneToMany 어노테이션과 함께 mappedby 속성을 넣어준다.
 Member 의 경우는 주인이 아니기 때문에 읽기만 할 수 있다.
 
-#### sql
-```sql
+#### java
+```java
     @OneToMany(mappedBy = "member")
     private List<Orders> ordersList = new ArrayList<>();
 ```
@@ -158,3 +161,194 @@ orders.setMember(member);
 OrderItem -> Item  
 주문상품에서 상품을 참조하는 경우는 많지만 그 반대는 거의 없어 단방향 관계로 설정했다.  
 (OrderItem.item) 필드를 사용해서 참조
+
+
+
+## v0.0.3
+- 요구사항 추가
+    - 상품을 주문할 때 배송 정보를 입력할 수 있다. 주문과 배송은 일대일 관계.
+    - 상품을 카테고리로 구분 가능
+- 클래스 생성(배송-delivery, 카테고리-category)
+- DDL 파일 생성
+
+
+    주문(Orders) 1-----------1 배송(Delivery)
+
+객체 관계를 고려할 때 주문이 배송을 자주 접근할 에정이기 때문에 외래키는 주문 테이블에 둔다.
+참고로 일대일 관계이므로 Orders 테이블의 DELIVERY_ID 외럐키는 유니크 제약 조건을 거는 것이 좋다.
+-> Orders.delivery(연관관계 주인)
+
+
+    카테고리(Category) *-----------* 상품(Item)
+
+카테고리와 상품은 다대다 관계이다.  
+주인은 카테고리로 정했다.
+
+참고로 다대다 관계는 테이블 연결을 JPA가 알아서 처리해주지만 연결테이블(CATEGORY_ITEM)에
+새로운 필드를 추가 할 수 없기 때문에 실무에서는 거의 쓰이지않고 1대다 다대1 관계로 CategoryItem
+이라는 엔티티를 추가하여 연결관계를 매핑하는 것을 권장한다.
+
+
+## v0.0.4
+- 요구사항 추가
+    - 상품의 종류는 음반, 도서, 영화가 있고 이후 더 확장될 수 있다. 
+    - 모든 데이터는 등록일과 수정일이 있어야한다.
+- 클래스 생성(도서, 음반, 영화)
+- DDL 파일 생성
+
+### 상속관계 매핑(3가지 방법)
+1) 각각의 테이블로 변환 : 테이블을 각자 만들고 조회할 때 조인을 사용한다. JPA에서는 조인전략(Joined Strategy)이라함
+- 장점
+    - 테이블이 정규화됨
+    - 외래키 참조 무결성 제약조건 활용할 수 있음
+    - 저장공간을 효율적으로 사용가능
+- 단점
+    - 조회할 때 조인이 많이 사용되므로 성능이 저하 될 수 있음
+    - 조회 쿼리가 복잡
+    - 데이터를 등록할 때 INSERT SQL을 두번 실행
+- 특징
+    - JPA 표준 명세는 구분 컬럼을 사용하도록 하지만 하이버네이트를 포함한 몇몇 구현체는 구분컬럼(@DiscriminatorColumn) 없이도 동작됨
+    - @PrimaryKeyJoinColumn(name="재정의할 키명") -> 생략하면 부모 키 그대로 사용함
+    
+2) 통합 테이블로 변환 : 테이블 하나에 데이터를 다 담는다. JPA에서는 단일 테이블 전략(Single-Table Strategy)이라함
+- 장점
+    - 조인이 필요없어 조회 성능이 빠름
+    - 조회 쿼리가 단순
+- 단점
+    - 자식엔티티가 매핑한 컬럼은 모두 null 허용해야함.
+    - 단일 테이블이 모든 것을 저장하다보니 테이블이 커질 수 있음. 상황에 따라 조회 성능이 느릴 수 있음.
+- 특징
+    - 구분 컬럼 필수 사용. @DiscriminatorColumn("이름") 설정
+    - @DiscriminatorColumn 지정하지 않으면 기본 엔티티이름을 사용(Movie, Album)
+
+
+3) 서브타입 테이블로 변환 : 서브 타입마다 하나의 테이블을 만든다. JPA에서는 구현클래스마다 테이블 전략(Table-per-Concrete-Class Strategy)
+- 장점
+    - 서브 타입을 구분해서 처리할 때 효과적
+    - not null 제약조건 사용가능
+- 단점
+    - 여러 자식테이블을 함께 조회할 때 성능이 느림(SQL UNION 사용해야함)
+    - 자식 테이블을 통합해서 쿼리하기 어려움
+-> DB설계자 & ORM전문가 둘다 추천하지 않는 전략.
+
+> 책에서는 단일 테이블 전략을 사용했고 본 예제에서는 조인 전력을 사용했다.
+
+### 공통된 컬럼 클래스 분리
+새로 생성한 클래스에 @MappedSuperclass 선언해 주고 다른 클래스에서 새로 생성한 클래스를 상속받으면 된다.
+
+## v0.0.5
+- 글로벌 페치 전략 설정
+- 영속성 전이 설정
+
+### 글로벌 페지 전략 기본값
+LAZE : @OneToMany, @ManyToMany
+EAGER: @OneToOne, @ManyToOne
+
+### 영속성 전이
+데이터베이스에 저장할 때 연관된 엔티티들은 모두 영속상태여야 한다.
+연관된 엔티티 중 영속상태가 아닌 엔티티가 있으면 에러가 발생한다.(정확히는 플러시 시점에서 오류)
+
+영속성 전이를 사용하면 편리하게 엔티티를 영속상태로 만들 수 있다.
+(cascade - CascadeType.ALL)
+
+영속성 전이는 연관관계 매핑하는 것과는 아무 관련이 없다.
+단지 엔티티를 영속화할 때 연관된 엔티티를 같이 영속화하는 편리함을 제공할 뿐이다.
+
+#### java
+```java
+/* 영속성 전이 사용 전 */
+...
+em.persist(delivery);
+em.persist(orderItem1);
+em.persist(orderItem2);
+em.persist(order);
+
+
+/* 영속성 전이 사용 후 */
+em.persist(order); // delivery, orderItems 플러시 시점에 영속성 전이
+```
+
+
+## v0.0.6
+- 값 타입 매핑
+
+Member, Delivery에 동일한 주소 정보를 Address라는 값 타입을 만들어서 사용한다.
+
+#### java
+```java
+@Embeddable
+public class Address {
+    private String city;
+
+    private String street;
+
+    private String zipcode;
+}
+```
+
+#### java
+```java
+public class Member {
+    @Embedded
+    private Address address;
+}
+```
+
+***
+
+## v0.1.1 
+- 회원 패키지 별도 구성
+- 회원 등록
+- 회원 목록 조회
+Service, Repository 구현
+
+***
+### 간단한 웹 애플리케이션 제작
+- 애플리케이션 기능 분석
+    1. 회원기능
+        - 회원 등록
+        - 회원 목록 조회
+    2. 상품기능
+        - 상품 등록
+        - 상품 목록 조회
+        - 상품 수정
+    3. 주문기능
+        - 상품 주문
+        - 주문 내역 조회
+        - 주문 취소
+        
+- 개발 순서
+    1. 비즈니스 로직을 수행하는 서비스와 리파지토리 계층을 개발
+    2. 테스트 케이스 작성 후 검증
+    3. 컨트롤러와 뷰 개발       
+    
+- 사용기술
+    - 뷰: thymeleaf
+    - 웹 계층 : 스프링 MVC
+    - 데이터 저장 계층 : JPA, 하이버네이트
+    - 데이터베이스 : H2 인메모리
+    - 기반 프레임워크 : 스프링 프레임워크 기반의 스프링부트
+    - 빌드 : 메이븐
+***
+
+### 엔티티메니저 주입
+```java
+@PersistenceContext
+EntityManager em;
+```
+
+### 엔티티 매니저 팩토리 주입
+```java
+@PersistenceUnit
+EntityManagerFactory emf;
+// @PersistenceContext를 사용해서 컨테이너가 관리하는 엔티티 매니저를 주입받아
+// 사용해서 엔티티 매니저 팩토매를 직접 사용하는 경우는 거의 없다.
+```
+
+### @Transactional
+@Transactional은 RuntimeException과 그 자식들인 Unchecked(언체크) 예외만 롤백한다.
+만약 체크 예외가 발생해도 롤백하고 싶다면
+`@Transactional(rollbackOn = Exception.class)` 이전 버전은 `@Transactional(rollbackFor = Exception.class)`
+를 명시하여 롤백할 예외를 정해야한다.  
+@Transactional의 위치가 클래스에 위치하면 모든 메서드에 적용하는 것이고,
+메서드에도 추가하면 메서드에 설정한 @Transactional 속성이 우선시 된다.
