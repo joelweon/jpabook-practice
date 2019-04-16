@@ -1,7 +1,10 @@
-package me.joel.jpabookpractice.entity;
+package me.joel.jpabookpractice.item.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.joel.jpabookpractice.entity.BaseEntity;
+import me.joel.jpabookpractice.entity.Category;
+import me.joel.jpabookpractice.exception.NotEnoughStockException;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -29,5 +32,17 @@ public class Item extends BaseEntity {
     private int stockQuantity; // 재고수량
 
 
+    public void addStock(int quantity) {
+        this.stockQuantity += quantity;
+    }
 
+    public void removeStock(int quantity) {
+        int resetStock = this.stockQuantity - quantity;
+
+        if (resetStock < 1) {
+            throw new NotEnoughStockException("need more stock");
+        } else {
+            this.stockQuantity = resetStock;
+        }
+    }
 }

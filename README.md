@@ -368,3 +368,12 @@ findOne(saveId)을 하면 DB에서 쿼리를 가져와서 둘은 다르다고 �
 참고 : https://stackoverflow.com/questions/26597440/how-do-you-test-spring-transactional-without-just-hitting-hibernate-level-1-cac
 
 확실하진 않아서 자세하고 정확한 건 더 공부 해야 할 듯 하다.
+
+## v0.1.3
+- 상품기능
+    - 상품 등록
+    - 상품 목록 조회
+    - 상품 수정
+Service, Repository 구현
+간단한 테스트 진행
+

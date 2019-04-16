@@ -2,6 +2,7 @@ package me.joel.jpabookpractice.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.joel.jpabookpractice.item.entity.Item;
 
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
