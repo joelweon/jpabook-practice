@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.joel.jpabookpractice.entity.Address;
 import me.joel.jpabookpractice.entity.BaseEntity;
-import me.joel.jpabookpractice.entity.Orders;
+import me.joel.jpabookpractice.order.entity.Orders;
 
 import javax.persistence.*;
 import java.util.ArrayList;

@@ -1,7 +1,8 @@
-package me.joel.jpabookpractice.entity;
+package me.joel.jpabookpractice.order.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.joel.jpabookpractice.entity.*;
 import me.joel.jpabookpractice.member.entity.Member;
 
 import javax.persistence.*;
@@ -39,6 +40,49 @@ public class Orders extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private OrderStatus status; // 주문상태
 
+
+    /**생성 메서드*/
+    public static Orders createOrder(Member member, Delivery delivery, OrderItem... orderItems) {
+
+        Orders order = new Orders();
+        order.setMember(member);
+        order.setDelivery(delivery);
+
+        for (OrderItem orderItem : orderItems) {
+            order.addOrderItem(orderItem);
+        }
+        order.setStatus(OrderStatus.ORDER);
+        order.setOrderDate(new Date());
+
+        return order;
+    }
+
+    /*비즈니스 로직*/
+    /**주문 취소*/
+    public void cancel() {
+
+        if (delivery.getDeliveryStatus() == DeliveryStatus.COMP) {
+            throw new RuntimeException("이미 배송완료된 상품은 취소가 불가능합니다.");
+        }
+
+        this.setStatus(OrderStatus.CANCEL);
+
+        for (OrderItem orderItem : orderItemList) {
+            orderItem.cancel();
+        }
+    }
+
+    /**전체 주문 가격 조회*/
+    public int getTortalPrice() {
+
+        int totalPrice = 0;
+
+        for (OrderItem orderItem : orderItemList) {
+            totalPrice += orderItem.getOrderPrice();
+        }
+
+        return totalPrice;
+    }
 
 
     /*

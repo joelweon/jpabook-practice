@@ -2,6 +2,7 @@ package me.joel.jpabookpractice.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.joel.jpabookpractice.order.entity.Orders;
 
 import javax.persistence.*;
 
@@ -26,5 +27,10 @@ public class Delivery {
     @Enumerated(EnumType.STRING)
     private DeliveryStatus deliveryStatus;
 
+    public Delivery() {}
+
+    public Delivery(Address address) {
+        this.address = address;
+    }
 
 }
