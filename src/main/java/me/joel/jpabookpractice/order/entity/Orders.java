@@ -73,12 +73,12 @@ public class Orders extends BaseEntity {
     }
 
     /**전체 주문 가격 조회*/
-    public int getTortalPrice() {
+    public int getTotalPrice() {
 
         int totalPrice = 0;
 
         for (OrderItem orderItem : orderItemList) {
-            totalPrice += orderItem.getOrderPrice();
+            totalPrice += orderItem.getTotalPrice();
         }
 
         return totalPrice;
