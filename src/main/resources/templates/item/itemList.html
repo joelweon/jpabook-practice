@@ -1,0 +1,37 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head"></head>
+<body>
+
+<div class="container">
+
+    <div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>상품명</th>
+                <th>가격</th>
+                <th>재고수량</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+                <th:block th:each="item : ${itemList}">
+                    <tr>
+                        <td th:text="${item.itemId}"></td>
+                        <td th:text="${item.name}"></td>
+                        <td th:text="${item.price}"></td>
+                        <td th:text="${item.stockQuantity}"></td>
+                        <td>
+                            <a href="/item/${item.itemId}/edit" class="btn btn-primary" role="button">수정</a>
+                        </td>
+                    </tr>
+                </th:block>
+            </tbody>
+        </table>
+    </div>
+
+</div> <!-- /container -->
+
+</body>
+</html>

@@ -442,4 +442,55 @@ Service, Repository 구현
     - 상품 주문이 성공해야 한다.
     - 상품을 주문할 때 재고 수량을 초과하면 안 된다.
     - 주문 취소가 성공해야 한다.
-    
+
+## v0.1.6
+- 웹 계층 구현
+    - 상품 등록
+    - 상품 수정
+- 뷰 계층 구현
+    - thymeleaf 적용
+    - 상품 등록 폼
+    - 상품 수정 폼
+- devtools 추가
+- head 레이아웃 분리
+
+
+자동 reload를 위한 devtools 의존성 추가  
+registry 검색 후 설정화면에서 compiler.automake.allow.when.app.running 체크  
+설정화면에서 Build > Compiler > Build project automatically 체크
+
+### 정적 리소스 default 경로
+```properties
+/META-INF/resources/
+/resources/
+/static/
+/public/
+```
+실제경로 : `main/resources/static/css/bootstrap.css` 면 `<link href="/css/bootstrap.css" rel="stylesheet">`
+이렇게 작성하면 된다.
+
+WEB-INF 같이 따로 경로 설정을 하려면 WebMvcConfiguration을 구현한 class를 하나 만들고 추가하면된다.  
+이렇게 하면 기존 spring이 제공하는 default 경로들 + 아래 커스터마이징 한 경로가 설정된다.
+```java
+public class WebConfig implements WebMvcConfigurer {
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+
+    }
+}
+```
+
+### thymeleaf에서 head 레이아웃 분리
+`<head th:replace="fragments/head :: head"></head>`
+"템플릿명 :: fragments명"  
+템플릿명은 기본적으로 사용하는 정적리소스 경로(여기서는 `resources`) 아래부터 경로를 적어주면된다.    
+실제 파일: `resources/templates/fragments/head.html`
+
+
+### thymeleaf - forEach
+#### html
+```html
+    <th:block th:each="item : ${itemList}">  
+        <td th:text="${item.itemId}"></td>
+    </th:block>
+```
