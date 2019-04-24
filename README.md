@@ -492,3 +492,20 @@ public class WebConfig implements WebMvcConfigurer {
         <td th:text="${item.itemId}"></td>
     </th:block>
 ```
+또는
+```html
+    <td th:each="item : ${itemList}" th:text="${item.itemId}"></td>
+```
+
+## v0.1.7
+- 웹 계층 구현
+    - 상품 수정
+    - 상품 주문
+    - 회원 가입
+    - 회원 목록
+- 뷰 계층 구현
+    - 상품 목록 폼
+    - 상품 수정 폼
+    - 상품 주문 폼
+    - 회원 등록 폼
+    - 회원 목록 폼

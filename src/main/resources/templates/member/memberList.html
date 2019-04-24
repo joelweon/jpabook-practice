@@ -1,0 +1,32 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head"></head>
+<body>
+
+<div class="container">
+    <div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>이름</th>
+                <th>도시</th>
+                <th>주소</th>
+                <th>우편번호</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr th:each="member : ${memberList}">
+                    <td th:text="${member.memberId}"></td>
+                    <td th:text="${member.name}"></td>
+                    <td th:text="${member.address.city}"></td>
+                    <td th:text="${member.address.street}"></td>
+                    <td th:text="${member.address.zipcode}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <a th:href="@{/}" class="btn btn-primary" role="button">홈</a>
+</div> <!-- /container -->
+
+</body>
+</html>

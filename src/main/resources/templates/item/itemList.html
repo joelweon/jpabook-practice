@@ -23,13 +23,14 @@
                         <td th:text="${item.price}"></td>
                         <td th:text="${item.stockQuantity}"></td>
                         <td>
-                            <a href="/item/${item.itemId}/edit" class="btn btn-primary" role="button">수정</a>
+                            <a th:href="@{/item/{id}/edit(id=${item.itemId})}" class="btn btn-primary" role="button">수정</a>
                         </td>
                     </tr>
                 </th:block>
             </tbody>
         </table>
     </div>
+    <a th:href="@{/}" class="btn btn-primary" role="button">홈</a>
 
 </div> <!-- /container -->
 
