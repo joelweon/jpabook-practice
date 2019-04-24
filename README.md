@@ -446,11 +446,9 @@ Service, Repository 구현
 ## v0.1.6
 - 웹 계층 구현
     - 상품 등록
-    - 상품 수정
 - 뷰 계층 구현
-    - thymeleaf 적용
     - 상품 등록 폼
-    - 상품 수정 폼
+    - thymeleaf 적용
 - devtools 추가
 - head 레이아웃 분리
 
