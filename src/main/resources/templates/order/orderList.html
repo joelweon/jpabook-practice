@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head"></head>
+<body>
+<div>
+    <div>
+        <form class="navbar-form navbar-left" role="search">
+            <div class="form-group">
+                <input type="text" name="memberName" class="form-control" placeholder="회원명" th:value="${orderSearch.memberName}">
+            </div>
+            <div class="form-group">
+                <select class="form-control" name="orderStatus">
+                    <option value="">주문상태</option>
+                    <option
+                            th:each="status : ${T(me.joel.jpabookpractice.entity.OrderStatus).values()}"
+                            th:value="${status}"
+                            th:text="${status.name}"
+                            th:selected="${status == orderSearch.orderStatus}">
+                    </option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-default">검색</button>
+        </form>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>회원명</th>
+            <th>대표상품 이름</th>
+            <th>대표상품 주문가격</th>
+            <th>대표상품 주문수량</th>
+            <th>상태</th>
+            <th>일시</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr th:each="item : ${ordersList}">
+                <td th:text="${item.orderId}"></td>
+                <td th:text="${item.member.name}"/>
+                <td th:text="${item.orderItemList[0].item.name}"></td>
+                <td th:text="${item.orderItemList[0].orderPrice}"></td>
+                <td th:text="${item.orderItemList[0].count}"></td>
+                <td th:each="status : ${T(me.joel.jpabookpractice.entity.OrderStatus).values()}"
+                    th:if="${item.status == status}"
+                    th:text="${status.name}"></td>
+                <td th:text="${item.orderDate}"></td>
+                <td>
+                    <a
+                        th:if="${item.status == T(me.joel.jpabookpractice.entity.OrderStatus).ORDER}"
+                        th:href="@{/order/{id}/cancel(id=${item.orderId})}" class="btn btn-danger">주문취소</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/}" class="btn btn-primary">홈</a>
+</div>
+
+</body>
+</html>

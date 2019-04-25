@@ -509,3 +509,13 @@ public class WebConfig implements WebMvcConfigurer {
     - 상품 주문 폼
     - 회원 등록 폼
     - 회원 목록 폼
+    
+    
+## v0.1.8
+- 웹 계층 구현
+    - 주문 내역
+    - 주문 취소
+    - 상품 검색
+- 뷰 계층 구현
+    - 주문 내역 폼
+- OrderStatus Enum class 수정(열거형 상수를 다른 값과 연결하기)
