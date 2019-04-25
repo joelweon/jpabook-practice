@@ -39,7 +39,7 @@ public class Item extends BaseEntity {
     public void removeStock(int quantity) {
         int resetStock = this.stockQuantity - quantity;
 
-        if (resetStock < 1) {
+        if (resetStock < 0) {
             throw new NotEnoughStockException("need more stock");
         } else {
             this.stockQuantity = resetStock;
